@@ -24,6 +24,7 @@ Method: %s
 `, request.URL.Path, request.Method)
 		if request.URL.Path == "/healthz" {
 			writer.WriteHeader(http.StatusOK)
+			log.Printf("Health check passed: status 200 OK")
 			return
 		}
 

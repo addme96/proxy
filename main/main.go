@@ -22,6 +22,11 @@ URL: %s
 Method: %s
 
 `, request.URL.Path, request.Method)
+		if request.URL.Path == "/healthz" {
+			writer.WriteHeader(http.StatusOK)
+			return
+		}
+
 		req, err := http.NewRequest(request.Method, apiURL+request.URL.Path, request.Body)
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)

@@ -17,17 +17,17 @@ func main() {
 	client := http.Client{Timeout: 30 * time.Second}
 	log.Println("Listening for requests at http://localhost:8080. Proxying to: " + apiURL)
 	log.Fatal(http.ListenAndServe(":8080", http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.URL.Path == "/healthz" {
+			writer.WriteHeader(http.StatusOK)
+			log.Printf("GET /healthz: Status 200 OK.")
+			return
+		}
+
 		log.Printf(`Request:
 URL: %s
 Method: %s
 
 `, request.URL.Path, request.Method)
-		if request.URL.Path == "/healthz" {
-			writer.WriteHeader(http.StatusOK)
-			log.Printf("Health check passed: status 200 OK")
-			return
-		}
-
 		req, err := http.NewRequest(request.Method, apiURL+request.URL.Path, request.Body)
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
